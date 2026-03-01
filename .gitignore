@@ -180,3 +180,4 @@ cache_dir/
 __pycache__/
 *.pyc
 _golden/
+outputs_only.tgz
