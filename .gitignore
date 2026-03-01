@@ -179,3 +179,4 @@ cache_dir/
 # Python
 __pycache__/
 *.pyc
+_golden/
