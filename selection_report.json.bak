@@ -1,0 +1,120 @@
+{
+  "repo_root": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl",
+  "runs": [
+    {
+      "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
+      "threshold": 0.45000000000000023,
+      "folds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "fold_weighting": "cv_f1",
+      "model": {
+        "backbone_name": "microsoft/deberta-v3-large",
+        "pooling": "cls",
+        "max_length": 192,
+        "dropout": 0.1,
+        "batch_size": 8,
+        "mixed_precision": "bf16"
+      },
+      "cv_fold_weights": {
+        "0": 0.25998178227645313,
+        "1": 0.23791752689553042,
+        "2": 0.22039066920484707,
+        "3": 0.08683412853590773,
+        "4": 0.19487589308726166
+      },
+      "cv_fold_reports": [
+        {
+          "fold": 0,
+          "cv_val_metrics_at_tstar": {
+            "precision_pos": 0.6036585365853658,
+            "recall_pos": 0.6265822784810127,
+            "f1_pos": 0.6149068322981367
+          },
+          "cv_val_size": 1675,
+          "weight": 0.25998178227645313,
+          "f1_pos": 0.6149068322981367
+        },
+        {
+          "fold": 1,
+          "cv_val_metrics_at_tstar": {
+            "precision_pos": 0.6538461538461539,
+            "recall_pos": 0.5345911949685535,
+            "f1_pos": 0.5882352941176471
+          },
+          "cv_val_size": 1675,
+          "weight": 0.23791752689553042,
+          "f1_pos": 0.5882352941176471
+        },
+        {
+          "fold": 2,
+          "cv_val_metrics_at_tstar": {
+            "precision_pos": 0.5542168674698795,
+            "recall_pos": 0.5786163522012578,
+            "f1_pos": 0.5661538461538461
+          },
+          "cv_val_size": 1675,
+          "weight": 0.22039066920484707,
+          "f1_pos": 0.5661538461538461
+        },
+        {
+          "fold": 3,
+          "cv_val_metrics_at_tstar": {
+            "precision_pos": 0.5180722891566265,
+            "recall_pos": 0.27044025157232704,
+            "f1_pos": 0.35537190082644626
+          },
+          "cv_val_size": 1675,
+          "weight": 0.08683412853590773,
+          "f1_pos": 0.35537190082644626
+        },
+        {
+          "fold": 4,
+          "cv_val_metrics_at_tstar": {
+            "precision_pos": 0.6218487394957983,
+            "recall_pos": 0.46540880503144655,
+            "f1_pos": 0.5323741007194245
+          },
+          "cv_val_size": 1675,
+          "weight": 0.19487589308726166,
+          "f1_pos": 0.5323741007194245
+        }
+      ],
+      "dev_metrics_ensemble": {
+        "precision_pos": 0.6223404255319149,
+        "recall_pos": 0.5879396984924623,
+        "f1_pos": 0.6046511627906976
+      }
+    }
+  ],
+  "selected": {
+    "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
+    "threshold": 0.45000000000000023,
+    "folds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "fold_weighting": "cv_f1",
+    "dev_metrics_ensemble": {
+      "precision_pos": 0.6223404255319149,
+      "recall_pos": 0.5879396984924623,
+      "f1_pos": 0.6046511627906976
+    },
+    "cv_fold_weights": {
+      "0": 0.25998178227645313,
+      "1": 0.23791752689553042,
+      "2": 0.22039066920484707,
+      "3": 0.08683412853590773,
+      "4": 0.19487589308726166
+    },
+    "dev_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/dev.txt",
+    "test_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/test.txt"
+  }
+}

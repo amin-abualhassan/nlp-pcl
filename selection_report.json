@@ -1,0 +1,50 @@
+{
+  "repo_root": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl",
+  "runs": [
+    {
+      "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
+      "threshold": 0.45000000000000023,
+      "folds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "fold_weighting": "none",
+      "model": {
+        "backbone_name": "microsoft/deberta-v3-large",
+        "pooling": "cls",
+        "max_length": 192,
+        "dropout": 0.1,
+        "batch_size": 8,
+        "mixed_precision": "bf16"
+      },
+      "dev_metrics_ensemble": {
+        "precision_pos": 0.6157894736842106,
+        "recall_pos": 0.5879396984924623,
+        "f1_pos": 0.6015424164524421
+      }
+    }
+  ],
+  "selected": {
+    "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
+    "threshold": 0.45000000000000023,
+    "folds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "fold_weighting": "none",
+    "dev_metrics_ensemble": {
+      "precision_pos": 0.6157894736842106,
+      "recall_pos": 0.5879396984924623,
+      "f1_pos": 0.6015424164524421
+    },
+    "cv_fold_weights": null,
+    "dev_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/dev.txt",
+    "test_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/test.txt"
+  }
+}
