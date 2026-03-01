@@ -1,8 +1,8 @@
 # nlp-pcl
 
-This repo is a cleaned-up, script-first version of the “Don’t Patronize Me!” (PCL) Task 4 Subtask 1 pipeline.
+Script-first pipeline for the “Don’t Patronize Me!” (PCL) **Task 4 / Subtask 1** classifier.
 
-The old notebook workflow (and the old `simpletransformers` approach) is kept under `legacy/` for reference, but the main path is now:
+Legacy notebooks / old `simpletransformers` workflow are kept under `legacy/` for reference, but the main path here is:
 
 - DeBERTa-v3-large backbone
 - Binary classifier head (PCL vs No PCL)
@@ -12,83 +12,130 @@ The old notebook workflow (and the old `simpletransformers` approach) is kept un
 - Fold ensemble inference
 - Outputs in the exact required format: `dev.txt` / `test.txt`
 
+Repo URL:
+
+```bash
+https://github.com/amin-abualhassan/nlp-pcl.git
+```
+
 ---
 
-## Repo layout
+## Repo layout (what’s what)
 
 - `src/pcl_exercise/` : package code (data loading, model, training, inference)
 - `configs/` : YAML configs (paths + hyperparams)
 - `scripts/` : CLI scripts
 - `data/` : your local data files for train/dev/test
-- `models/` : restored model artifacts (generated locally; don’t commit this folder)
-- `outputs_only.tgz.part_*` + `outputs_only.tgz.sha256` : split archive used to rebuild `models/` on any machine
+- `models/` : **generated locally** after restoring/extracting model artifacts (don’t commit this folder)
+- `outputs_only.tgz.part_*` + `outputs_only.tgz.sha256` : model archive split into parts (stored via Git LFS)
 
 ---
 
-## Step 0 : Setup
+## Quick start (fresh clone → restore models → rebuild dev/test)
 
-From the repo root:
+### 0) System prereqs (Ubuntu / WSL)
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git git-lfs
+git lfs install
+```
+
+### 1) Clone (with or without LFS smudge)
+
+#### Normal clone (recommended)
+This should fetch LFS objects automatically (including `outputs_only.tgz.part_*`).
+
+```bash
+cd ~
+git clone https://github.com/amin-abualhassan/nlp-pcl.git
+cd nlp-pcl
+```
+
+If the clone feels slow, it’s usually downloading the LFS parts (they’re big). Let it finish.
+
+#### “Fast” clone (skip downloading LFS during checkout)
+Useful if you want the repo quickly, then pull LFS explicitly.
+
+```bash
+cd ~
+GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/amin-abualhassan/nlp-pcl.git
+cd nlp-pcl
+git lfs pull
+```
+
+Sanity check (you should see the parts listed):
+
+```bash
+git lfs ls-files | grep outputs_only.tgz.part || true
+ls -lh outputs_only.tgz.part_*
+```
+
+> If you ever cloned as `sudo` and then run git as your normal user, you may get “dubious ownership”.
+> Fix:
+> ```bash
+> git config --global --add safe.directory "$(pwd)"
+> ```
+
+### 2) Create a venv
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -U pip
+python -m pip install -U pip
+```
+
+### 3) Install PyTorch (GPU vs CPU)
+
+#### GPU (CUDA)
+First, check what you have:
+
+```bash
+nvidia-smi
+python -c "import torch; print('torch', torch.__version__, 'cuda?', torch.cuda.is_available()); print('torch cuda', torch.version.cuda)"
+```
+
+Example for CUDA 12.8 wheels:
+
+```bash
+pip install --index-url https://download.pytorch.org/whl/cu128 torch torchvision torchaudio
+```
+
+If you already have a CUDA torch installed and `cuda? True`, you can keep it.
+
+#### CPU only
+```bash
+pip install torch torchvision torchaudio
+```
+
+### 4) Install project deps
+
+```bash
 pip install -r requirements.txt
 ```
 
-If you want to run on GPU, install the matching PyTorch build for your CUDA first, then install requirements.
-
----
-
-## Cloning
-
-### This repo: **no Git LFS needed**
-Model artifacts are shipped as a split archive (`outputs_only.tgz.part_*`).  
-So a normal clone is enough:
-
+(Optional but convenient)
 ```bash
-git clone <repo-url>
-cd nlp-pcl
+pip install -e .
 ```
 
-Then restore the models:
+### 5) Restore the saved models into `./models`
+
+The trained fold models are shipped as a split archive (parts + sha256). Restore them like this:
 
 ```bash
+chmod +x scripts/restore_models.sh
 bash scripts/restore_models.sh
 ```
 
-After that you should have `models/outputs/.../models/fold*/model.pt` available locally.
-
-### If you ever use a branch/repo that stores models in **Git LFS**
-You’ll know it’s LFS if you see `.gitattributes` with `filter=lfs` or `git lfs ls-files` shows model files.
-
-Quick setup:
+You should end up with:
 
 ```bash
-# one-time
-git lfs install
-
-# after cloning
-git lfs pull
+ls models/outputs/
+ls models/outputs/*/models/fold0/model.pt
 ```
 
-(Install `git-lfs` via your OS package manager if needed.)
-
----
-
-## Option A : You already have trained models (restore + predict)
-
-### 1) Restore model artifacts into `./models`
-
-```bash
-bash scripts/restore_models.sh
-```
-
-### 2) Regenerate `dev.txt` and `test.txt`
-
-This script searches for run directories under:
-- `models/outputs/*` (restored)
-- `outputs/*` (if you trained locally)
+### 6) Rebuild `dev.txt` and `test.txt` (no retraining)
 
 Plain mean over folds (no weighting):
 
@@ -96,12 +143,24 @@ Plain mean over folds (no weighting):
 python3 scripts/build_dev_test.py --fold_weighting none
 ```
 
-Outputs:
-- `dev.txt` (repo root)
-- `test.txt` (repo root)
-- `selection_report.json` (what it picked + metrics)
+This writes (repo root):
+- `dev.txt`
+- `test.txt`
+- `selection_report.json`
 
-### 3) Check dev F1
+### 7) Verify you get the same outputs (recommended)
+
+Hashes:
+
+```bash
+sha256sum dev.txt test.txt selection_report.json
+```
+
+Notes:
+- `dev.txt` and `test.txt` should match exactly across machines if everything is the same.
+- `selection_report.json` may differ because it can contain absolute paths. That’s fine.
+
+Dev F1 check:
 
 ```bash
 python3 scripts/eval_dev_f1.py --dev_csv data/dev_df_2.csv --pred dev.txt
@@ -109,20 +168,19 @@ python3 scripts/eval_dev_f1.py --dev_csv data/dev_df_2.csv --pred dev.txt
 
 ---
 
-## Option B : Train from scratch
+## Training from scratch (optional)
 
 ### 1) Put your data in `data/`
 
 Minimum:
-
 - `data/train_df.csv`
 - `data/dev_df_2.csv`
-- `data/task4_test.tsv` (only needed to produce test predictions)
+- `data/task4_test.tsv` (only needed to produce `test.txt`)
 
 Optional (aux labels):
 - `data/other/train_semeval_parids-labels.csv`
 - `data/other/dev_semeval_parids-labels.csv`
-- or span categories TSV (see config)
+- or a span categories TSV (see config)
 
 ### 2) Train 5-fold CV + tune OOF threshold
 
@@ -153,25 +211,11 @@ python3 scripts/build_dev_test.py --runs_root outputs --fold_weighting none
 
 Default is a plain average across folds.
 
-If you want to *downweight* weaker folds using their CV performance on the train split:
+If you want to downweight weaker folds using their CV performance on the train split:
 
 ```bash
 python3 scripts/build_dev_test.py --fold_weighting cv_f1 --gamma 2.0 --min_weight 0.05
 ```
-
----
-
-## Data expectations
-
-Your CSV/TSV files must have at least:
-
-- `par_id`
-- `text`
-- `label`
-- `target_flag` and/or a derived `y` (binary), depending on your loader config
-
-Tokenizer errors like `TextEncodeInput must be ...` are almost always a NaN in `text`.
-The scripts defensively do `text = fillna("").astype(str)`.
 
 ---
 
@@ -180,15 +224,24 @@ The scripts defensively do `text = fillna("").astype(str)`.
 ### `ModuleNotFoundError: No module named 'pcl_exercise'`
 Run from the repo root, and either:
 - use the scripts as shown (they add `src/` to `sys.path`), or
-- install the package editable:
+- install editable:
 
 ```bash
 pip install -e .
+```
+
+### `restore_models.sh` says it can’t find `outputs_only.tgz.part_*`
+That means the parts are missing locally (usually because LFS objects weren’t pulled).
+Run:
+
+```bash
+git lfs pull
+ls -lh outputs_only.tgz.part_*
 ```
 
 ---
 
 ## Sharing note
 
-Before making this repo public, double-check you’re allowed to redistribute any dataset files under `data/`.
-If unsure, keep it private and share only code + restore script.
+Before making the repo public, double-check you’re allowed to redistribute any dataset files under `data/`.
+If unsure, keep the repo private and only share code + restore script.
