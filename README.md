@@ -151,7 +151,7 @@ python3 scripts/build_dev_test.py --runs_root outputs --fold_weighting none
 
 ## Fold weighting (optional)
 
-Default is a plain average across folds (usually safest).
+Default is a plain average across folds.
 
 If you want to *downweight* weaker folds using their CV performance on the train split:
 
