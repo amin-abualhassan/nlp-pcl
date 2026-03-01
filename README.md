@@ -18,6 +18,12 @@ Repo URL:
 https://github.com/amin-abualhassan/nlp-pcl.git
 ```
 
+You can also find the models folder in this Google Drive folder (if you faced issues with lfs):
+
+```bash
+https://drive.google.com/drive/folders/1FAUTcZRYLRKM-L8iZt_-mGZiH9xzGy89?usp=sharing
+```
+
 ---
 
 ## Repo layout (what’s what)
@@ -150,98 +156,37 @@ This writes (repo root):
 
 ### 7) Verify you get the same outputs (recommended)
 
-Hashes:
+Run the prediction script twice : it should be deterministic (same inputs → same outputs):
 
 ```bash
-sha256sum dev.txt test.txt selection_report.json
+python3 scripts/build_dev_test.py --fold_weighting none --report_json selection_report_fresh.json
+python3 scripts/build_dev_test.py --fold_weighting none --report_json selection_report_fresh.json
 ```
 
-Notes:
-- `dev.txt` and `test.txt` should match exactly across machines if everything is the same.
-- `selection_report.json` may differ because it can contain absolute paths. That’s fine.
+You should see something like:
 
-Dev F1 check:
+- Selected run: `models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1`
+- Threshold `t*`: `0.45`
+- DEV ensemble @t*: `f1≈0.6015`, `precision≈0.6158`, `recall≈0.5879`
+
+Then verify the files match across machines using hashes:
+
+```bash
+sha256sum dev.txt test.txt selection_report_fresh.json
+```
+
+Reference hashes from a clean clone run (these should match if you used the same restored models + same data files):
+
+- `dev.txt`  → `5d16a7fb1fe9e85df0d7635d4b45bb47a7de9ce5012d881a47fbe766822f1c10`
+- `test.txt` → `2a149df15d9f3f1d505dcd8b80e82398ccc1422be22a5583b209bf115e1c31cc`
+
+Notes:
+- `dev.txt` and `test.txt` are the important ones for submission. They should match exactly across machines.
+- The selection report can differ if it contains absolute paths (e.g., repo root on your machine). That’s normal.
+
+Dev F1 check (same metric as the reference baseline):
 
 ```bash
 python3 scripts/eval_dev_f1.py --dev_csv data/dev_df_2.csv --pred dev.txt
 ```
 
----
-
-## Training from scratch (optional)
-
-### 1) Put your data in `data/`
-
-Minimum:
-- `data/train_df.csv`
-- `data/dev_df_2.csv`
-- `data/task4_test.tsv` (only needed to produce `test.txt`)
-
-Optional (aux labels):
-- `data/other/train_semeval_parids-labels.csv`
-- `data/other/dev_semeval_parids-labels.csv`
-- or a span categories TSV (see config)
-
-### 2) Train 5-fold CV + tune OOF threshold
-
-```bash
-python3 scripts/train_cv.py --config configs/default.yaml
-```
-
-This creates a timestamped run dir under `outputs/...` with:
-- `models/fold0..fold4/model.pt`
-- `threshold.json` (t*)
-- OOF probs/metrics + logs + resolved config
-
-### 3) Predict dev/test for that run
-
-```bash
-python3 scripts/predict.py --config configs/default.yaml --run_dir outputs/<RUN_DIR> --split both
-```
-
-Or use the “pick best run and write dev/test” script:
-
-```bash
-python3 scripts/build_dev_test.py --runs_root outputs --fold_weighting none
-```
-
----
-
-## Fold weighting (optional)
-
-Default is a plain average across folds.
-
-If you want to downweight weaker folds using their CV performance on the train split:
-
-```bash
-python3 scripts/build_dev_test.py --fold_weighting cv_f1 --gamma 2.0 --min_weight 0.05
-```
-
----
-
-## Troubleshooting
-
-### `ModuleNotFoundError: No module named 'pcl_exercise'`
-Run from the repo root, and either:
-- use the scripts as shown (they add `src/` to `sys.path`), or
-- install editable:
-
-```bash
-pip install -e .
-```
-
-### `restore_models.sh` says it can’t find `outputs_only.tgz.part_*`
-That means the parts are missing locally (usually because LFS objects weren’t pulled).
-Run:
-
-```bash
-git lfs pull
-ls -lh outputs_only.tgz.part_*
-```
-
----
-
-## Sharing note
-
-Before making the repo public, double-check you’re allowed to redistribute any dataset files under `data/`.
-If unsure, keep the repo private and only share code + restore script.
