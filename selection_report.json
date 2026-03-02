@@ -1,8 +1,8 @@
 {
-  "repo_root": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl",
+  "repo_root": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl_fresh",
   "runs": [
     {
-      "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
+      "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl_fresh/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
       "threshold": 0.45000000000000023,
       "folds": [
         0,
@@ -28,7 +28,7 @@
     }
   ],
   "selected": {
-    "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
+    "run_dir": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl_fresh/models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1",
     "threshold": 0.45000000000000023,
     "folds": [
       0,
@@ -44,7 +44,7 @@
       "f1_pos": 0.6015424164524421
     },
     "cv_fold_weights": null,
-    "dev_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/dev.txt",
-    "test_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl/test.txt"
+    "dev_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl_fresh/dev.txt",
+    "test_out": "/mnt/c/Users/Vector/MScAIML/Term2/NLP/cw/nlp-pcl_fresh/test.txt"
   }
 }
