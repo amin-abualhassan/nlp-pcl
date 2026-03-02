@@ -1,0 +1,10 @@
+| check                        |   value |
+|:-----------------------------|--------:|
+| train_size                   |    8375 |
+| dev_size                     |    2094 |
+| train_within_dup_texts       |       0 |
+| dev_within_dup_texts         |       0 |
+| unique_train_norm_texts      |    8375 |
+| unique_dev_norm_texts        |    2094 |
+| cross_split_dup_pairs        |       0 |
+| cross_split_unique_dup_texts |       0 |

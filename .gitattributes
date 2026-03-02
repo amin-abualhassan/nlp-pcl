@@ -1,1 +1,2 @@
 outputs_only.tgz.part_* filter=lfs diff=lfs merge=lfs -text
+BestModel/model_archive/* filter=lfs diff=lfs merge=lfs -text

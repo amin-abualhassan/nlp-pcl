@@ -1,0 +1,13 @@
+split,check,count,pct
+train,has_html_entity (&...;),65,0.7761194029850746
+train,has_url (http/www),7,0.08358208955223881
+train,has_newline,0,0.0
+train,has_non_ascii,0,0.0
+train,has_repeated_punct (!!/??),0,0.0
+train,has_many_spaces,0,0.0
+dev,has_html_entity (&...;),13,0.620821394460363
+dev,has_url (http/www),2,0.09551098376313276
+dev,has_newline,0,0.0
+dev,has_non_ascii,0,0.0
+dev,has_repeated_punct (!!/??),0,0.0
+dev,has_many_spaces,0,0.0

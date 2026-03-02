@@ -1,0 +1,22 @@
+| keyword       |   count |    p(y=1) | split   |
+|:--------------|--------:|----------:|:--------|
+| migrant       |     882 | 0.0351474 | train   |
+| migrant       |     207 | 0.0241546 | dev     |
+| refugee       |     880 | 0.0829545 | train   |
+| refugee       |     188 | 0.0691489 | dev     |
+| vulnerable    |     871 | 0.0688863 | train   |
+| vulnerable    |     209 | 0.0956938 | dev     |
+| homeless      |     865 | 0.172254  | train   |
+| homeless      |     212 | 0.136792  | dev     |
+| in-need       |     856 | 0.167056  | train   |
+| in-need       |     226 | 0.146018  | dev     |
+| immigrant     |     843 | 0.0272835 | train   |
+| immigrant     |     218 | 0.0321101 | dev     |
+| women         |     837 | 0.0454002 | train   |
+| women         |     233 | 0.0600858 | dev     |
+| disabled      |     834 | 0.0803357 | train   |
+| disabled      |     194 | 0.0721649 | dev     |
+| hopeless      |     788 | 0.124365  | train   |
+| hopeless      |     217 | 0.119816  | dev     |
+| poor-families |     719 | 0.155772  | train   |
+| poor-families |     190 | 0.2       | dev     |
