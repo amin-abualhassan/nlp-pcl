@@ -1,43 +1,53 @@
 # nlp-pcl
 
-Script-first pipeline for the “Don’t Patronize Me!” (PCL) **NLP coursework**.
+Script-first pipeline for the **“Don’t Patronize Me!” (PCL)** NLP coursework: binary classification (**PCL=1** vs **No PCL=0**).
 
-Legacy notebooks / old `simpletransformers` workflow are kept under `legacy/` for reference, but the main path here is:
+Main ideas in the final submission pipeline:
 
-- DeBERTa-v3-large backbone
+- **DeBERTa-v3-large** backbone (`microsoft/deberta-v3-large`)
 - Binary classifier head (PCL vs No PCL)
-- Optional 7-category auxiliary head (multi-label)
-- 5-fold Stratified CV
-- OOF threshold tuning for **F1 on the positive class**
-- Fold ensemble inference
-- Outputs in the exact required format: `dev.txt` / `test.txt`
+- Optional **7-category auxiliary head** (multi-label) when category labels are available
+- **5-fold Stratified CV**
+- **OOF threshold tuning** for **F1 on the positive class**
+- Fold **ensemble inference** (default: simple mean over folds)
+- Outputs in the required format: `dev.txt` / `test.txt` (one `0/1` per line)
 
-Repo URL:
+Repository:
 
-```bash
-https://github.com/amin-abualhassan/nlp-pcl.git
+```text
+https://github.com/amin-abualhassan/nlp-pcl
 ```
 
-You can also find the models folder in this Google Drive folder (if you faced issues with lfs):
+If Git LFS is blocked/slow for you, there is also a Google Drive fallback for the model artifacts:
 
-```bash
+```text
 https://drive.google.com/drive/folders/1FAUTcZRYLRKM-L8iZt_-mGZiH9xzGy89?usp=sharing
 ```
 
 ---
 
-## Repo layout
+## Repo layout (high level)
 
 - `src/pcl_exercise/` : package code (data loading, model, training, inference)
 - `configs/` : YAML configs (paths + hyperparams)
 - `scripts/` : CLI scripts
-- `data/` : your local data files for train/dev/test
-- `models/` : **generated locally** after restoring/extracting model artifacts (don’t commit this folder)
-- `outputs_only.tgz.part_*` + `outputs_only.tgz.sha256` : model archive split into parts (stored via Git LFS)
+- `data/` : local data files for train/dev/test
+- `reports/` : EDA + local evaluation outputs used in the report
+- `BestModel/` : **the submission model artifact bundle (per spec)**  
+  - `BestModel/model_archive/` : split archive parts + checksum (tracked via Git LFS)
+  - `BestModel/default.yaml` : config used for the best run
+  - `BestModel/run_dir.txt` : points to the selected run directory name
+- `models/` : **generated locally** after restoring/extracting the model artifacts (not committed)
+
+At repo root, these are the submission files:
+
+- `dev.txt`
+- `test.txt`
+- `selection_report.json` (selection metadata)
 
 ---
 
-## Quick start
+## Quick start (fresh clone → restore models → rebuild dev/test)
 
 ### 0) System prereqs (Ubuntu / WSL)
 
@@ -49,8 +59,7 @@ git lfs install
 
 ### 1) Clone (with or without LFS smudge)
 
-#### Normal clone (recommended)
-This should fetch LFS objects automatically (including `outputs_only.tgz.part_*`).
+**Normal clone (recommended)**
 
 ```bash
 cd ~
@@ -58,10 +67,7 @@ git clone https://github.com/amin-abualhassan/nlp-pcl.git
 cd nlp-pcl
 ```
 
-If the clone feels slow, it’s usually downloading the LFS parts (they’re big). Let it finish.
-
-#### “Fast” clone (skip downloading LFS during checkout)
-Useful if you want the repo quickly, then pull LFS explicitly.
+If you want a faster checkout and then fetch LFS explicitly:
 
 ```bash
 cd ~
@@ -70,18 +76,12 @@ cd nlp-pcl
 git lfs pull
 ```
 
-Sanity check (you should see the parts listed):
+Sanity check:
 
 ```bash
-git lfs ls-files | grep outputs_only.tgz.part || true
-ls -lh outputs_only.tgz.part_*
+git lfs ls-files | grep BestModel/model_archive || true
+ls -lh BestModel/model_archive/
 ```
-
-> If you ever cloned as `sudo` and then run git as your normal user, you may get “dubious ownership”.
-> Fix:
-> ```bash
-> git config --global --add safe.directory "$(pwd)"
-> ```
 
 ### 2) Create a venv
 
@@ -91,25 +91,23 @@ source .venv/bin/activate
 python -m pip install -U pip
 ```
 
-### 3) Install PyTorch
+### 3) Install PyTorch (GPU vs CPU)
 
-#### GPU (CUDA)
-First, check what you have:
+Check:
 
 ```bash
-nvidia-smi
+nvidia-smi || true
 python -c "import torch; print('torch', torch.__version__, 'cuda?', torch.cuda.is_available()); print('torch cuda', torch.version.cuda)"
 ```
 
-Example for CUDA 12.8 wheels:
+Example CUDA 12.8 wheels:
 
 ```bash
 pip install --index-url https://download.pytorch.org/whl/cu128 torch torchvision torchaudio
 ```
 
-If you already have a CUDA torch installed and `cuda? True`, you can keep it.
+CPU-only:
 
-#### CPU only
 ```bash
 pip install torch torchvision torchaudio
 ```
@@ -120,28 +118,30 @@ pip install torch torchvision torchaudio
 pip install -r requirements.txt
 ```
 
-(Optional)
+(Optional, convenient)
+
 ```bash
 pip install -e .
 ```
 
 ### 5) Restore the saved models into `./models`
 
-The trained fold models are shipped as a split archive (parts + sha256). Restore them like this:
+The trained fold models are stored as a split archive under `BestModel/model_archive/`.
+This script reconstructs the archive, checks its SHA256, extracts into `./models/`, and deletes the temporary `.tgz`.
 
 ```bash
 chmod +x scripts/restore_models.sh
 bash scripts/restore_models.sh
 ```
 
-You should end up with:
+You should end up with something like:
 
 ```bash
 ls models/outputs/
 ls models/outputs/*/models/fold0/model.pt
 ```
 
-### 6) Rebuild `dev.txt` and `test.txt` using the existing models
+### 6) Rebuild `dev.txt` and `test.txt`
 
 Plain mean over folds (no weighting):
 
@@ -149,40 +149,66 @@ Plain mean over folds (no weighting):
 python3 scripts/build_dev_test.py --fold_weighting none
 ```
 
-This writes (repo root):
+Writes:
+
 - `dev.txt`
 - `test.txt`
 - `selection_report.json`
 
-### 7) Verify you get the same outputs
-
-Run the prediction script twice:
+### 7) Verify determinism
 
 ```bash
 python3 scripts/build_dev_test.py --fold_weighting none --report_json selection_report_fresh.json
 python3 scripts/build_dev_test.py --fold_weighting none --report_json selection_report_fresh.json
-```
-
-It will be something like:
-
-- Selected run: `models/outputs/20260228_165925_deberta_mtl_cv5_lam_sweep_1`
-- Threshold `t*`: `0.45`
-- DEV ensemble @t*: `f1≈0.6015`, `precision≈0.6158`, `recall≈0.5879`
-
-Then verify the files match across machines using hashes:
-
-```bash
 sha256sum dev.txt test.txt selection_report_fresh.json
 ```
 
-Reference hashes from a clean clone run:
+`dev.txt` / `test.txt` should match exactly across machines if the same restored models + same data files are used.
 
-- `dev.txt`  → `5d16a7fb1fe9e85df0d7635d4b45bb47a7de9ce5012d881a47fbe766822f1c10`
-- `test.txt` → `2a149df15d9f3f1d505dcd8b80e82398ccc1422be22a5583b209bf115e1c31cc`
+---
 
-Dev F1 check:
+## Training (re-running CV)
+
+If you want to re-train the full 5-fold CV run:
+
+```bash
+python3 scripts/train_cv.py --config configs/default.yaml
+```
+
+For a faster smoke test:
+
+```bash
+python3 scripts/train_cv.py --config configs/smoke.yaml
+```
+
+---
+
+## Evaluation scripts
+
+### Global evaluation (dev F1)
 
 ```bash
 python3 scripts/eval_dev_f1.py --dev_csv data/dev_df_2.csv --pred dev.txt
 ```
 
+### Local evaluation (Stage 5.2)
+
+This produces error analysis + slice analysis + PR/cali plots under a report folder:
+
+```bash
+python3 scripts/local_eval_stage5.py \
+  --selection_report selection_report.json \
+  --dev_csv data/dev_df_2.csv \
+  --pred dev.txt \
+  --pred_alt dev.txt.bak \
+  --cats_tsv data/raw/dontpatronizeme_categories.tsv \
+  --out_dir reports/local_eval
+```
+
+---
+
+## Notes
+
+- Inference is deterministic for fixed models + data (same inputs → same outputs).
+- `BestModel/` exists to satisfy the coursework requirement: “push best model + code in a folder named BestModel”.
+- The fold models are shipped as an archive (Git LFS) because raw model folders are too large for normal git.
