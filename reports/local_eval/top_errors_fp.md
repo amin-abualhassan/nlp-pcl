@@ -1,0 +1,26 @@
+# Top False Positives (highest prob, y=0)
+
+- par_id=10031 | prob=0.994 | keyword=in-need | country=za | label_scale=0
+  - text: Adopt a Mission serves as a platform for the church and for likeminded people to reach out to unemployed families in the communities -- whoever is in need . " <h> The forgotten people of Brooklyn
+- par_id=9130 | prob=0.993 | keyword=vulnerable | country=ng | label_scale=0
+  - text: In another development , Eiremiokhae was also bestowed with a Humanitarian Award by the Trinity International University of Ambassadors also in Georgia for his works of charity and care for widows and the vulnerable .
+- par_id=9423 | prob=0.993 | keyword=in-need | country=in | label_scale=0
+  - text: Christmas is celebration of the birth of not merely a child , but a child who changed the destiny of humans forever . It is celebration of the fact that God wanted to be a part of the human race and so he took on flesh…
+- par_id=8838 | prob=0.993 | keyword=in-need | country=ph | label_scale=1
+  - text: " I always consider this job as a gift , being a nurse is a reward and task given by God to help those who are in need . Seeing your patient recover from an illness , watching their families smile when you give them car…
+- par_id=8626 | prob=0.992 | keyword=in-need | country=bd | label_scale=1
+  - text: " Your personal leadership has been critical to addressing the plight of the Rohingya who fled to safety in your country . I thank you for all you have done to assist these men , women and children in need , " he wrote…
+- par_id=8978 | prob=0.992 | keyword=in-need | country=my | label_scale=1
+  - text: Jesus begins his teaching in Matthew with the Sermon on the Mount . One group he blesses is those in need of comfort , Blessed are they who mourn , for they will be comforted ( Mt 5:4 ) .
+- par_id=9411 | prob=0.991 | keyword=in-need | country=ph | label_scale=1
+  - text: " The boxing community is wonderful at helping those in need , today is a prime example .
+- par_id=10338 | prob=0.990 | keyword=poor-families | country=au | label_scale=0
+  - text: IN 2004 , a small group of women from St John 's Anglican Church in Hervey Bay decided to meet together to sew clothes and bedding for orphan children and poor families being cared for by Australian volunteers in Tanzan…
+- par_id=10200 | prob=0.987 | keyword=refugee | country=in | label_scale=0
+  - text: She also praised the efforts to stabilise the lives of refugees , by providing for their basic needs and helping them overcome their challenges , while stressing that supporting refugees is an ongoing part of the UAE 's…
+- par_id=9543 | prob=0.975 | keyword=poor-families | country=au | label_scale=0
+  - text: Many of the children are from poor families , with parents convinced their children will have a better life at the orphanage , according to Lumos .
+- par_id=9540 | prob=0.967 | keyword=in-need | country=gb | label_scale=1
+  - text: She added : " I am really happy with the awards , but I just want to help those in need . "
+- par_id=8689 | prob=0.964 | keyword=homeless | country=jm | label_scale=0
+  - text: Allman Town resident Sonya Wilson ( second left ) , and one of her daughters ( fourth left ) hand out boxed lunches to a group of homeless people on King Street , downtown Kingston , on Thursday .

@@ -1,0 +1,26 @@
+# Top False Negatives (lowest prob, y=1)
+
+- par_id=7414 | prob=0.074 | keyword=disabled | country=hk | label_scale=3
+  - text: Cheung said 20 disabled undergraduate students from seven universities will start their eight-week internship in government departments this month , receiving the same salaries as able-bodied colleagues of HK$9,600 a mo…
+- par_id=10326 | prob=0.074 | keyword=poor-families | country=hk | label_scale=2
+  - text: A top health official said today that the government could consider subsidies to help poor families pay for healthy food -- or imposing taxes on unhealthy products -- if other efforts fail to encourage better eating hab…
+- par_id=7913 | prob=0.075 | keyword=homeless | country=gb | label_scale=2
+  - text: Charity plans to forgo parking so homeless can have gym and medical centre
+- par_id=1648 | prob=0.075 | keyword=women | country=za | label_scale=3
+  - text: Mari ? tte Coetzee from Stofberg Family Vineyards ( whose Mia Chenin Blanc 2016 was the garagiste trophy winner at last year 's Michelangelo Awards and the recipient of four Platter 's stars for the Mari ? tte Chenin Bl…
+- par_id=2918 | prob=0.075 | keyword=migrant | country=pk | label_scale=3
+  - text: Famously progressive San Francisco has among America 's most eco-friendly public policies and has declared itself a sanctuary to immigrants it considers persecuted by President Donald Trump 's administration .
+- par_id=6234 | prob=0.075 | keyword=poor-families | country=us | label_scale=2
+  - text: The World Health Organization did not give a reason for the increase in deaths , but a provincial health official in Sindh said that the disease hit areas where poor families did not vaccinate their children .
+- par_id=5722 | prob=0.075 | keyword=hopeless | country=bd | label_scale=4
+  - text: Calling for an immediate political solution to resolve the crisis in Syria , Erdogan said : " Turkey 's incursion into northern Syria in early September had led to establishing peace , balance and stability in a region…
+- par_id=2133 | prob=0.075 | keyword=homeless | country=gb | label_scale=2
+  - text: The drama 's compelling nature derived from a thorough knowledge of its cast , more numerous and improbable than any soap opera 's . The bite came from underlying tragedy : lost wives , lost jobs , pennilessness , homel…
+- par_id=7394 | prob=0.075 | keyword=women | country=pk | label_scale=2
+  - text: KARACHI - On the eve of International Women 's Day , Pakistan People 's Party Chairman Bilawal Bhutto Zardari has announced that his party 's Women Wing will organise Karwan-e-Benazir rallies in all the provincial capit…
+- par_id=7040 | prob=0.075 | keyword=poor-families | country=au | label_scale=3
+  - text: Michael Gove 's recent suggestion that inadequate financial management skills among poor families are to blame for the increasing demand on food banks has , unsurprisingly , sparked an angry response . Critics feel the…
+- par_id=8330 | prob=0.075 | keyword=refugee | country=ng | label_scale=2
+  - text: Many refugees do n't want to be resettled anywhere , let alone in the US .
+- par_id=8706 | prob=0.075 | keyword=poor-families | country=pk | label_scale=3
+  - text: A massive cleanup and awareness drive was conducted jointly by the LWMC and the Bahria University , Lahore Campus in different localities of Johar Town . The purpose of the drive was to improve state of cleanliness and…

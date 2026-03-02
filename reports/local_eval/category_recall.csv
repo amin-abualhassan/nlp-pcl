@@ -1,0 +1,8 @@
+category,n_pos_with_cat,tp,fn,recall
+Authority_voice,19,7,12,0.3684210526315789
+Presupposition,27,15,12,0.5555555555555556
+Shallow_solution,18,10,8,0.5555555555555556
+The_poorer_the_merrier,7,4,3,0.5714285714285714
+Compassion,75,45,30,0.6
+Unbalanced_power_relations,111,74,37,0.6666666666666666
+Metaphors,21,17,4,0.8095238095238095
